@@ -2324,7 +2324,7 @@ void P_PlayerInSpecialSector (player_t* player)
 
   // Has hit ground.
   //jff add if to handle old vs generalized types
-  if (sector->special<32) // regular sector specials
+  if (!(sector->special & GENERALISED_SECTOR_MASK))
   {
     switch (sector->special)
       {
@@ -2413,7 +2413,7 @@ void P_PlayerInSpecialSector (player_t* player)
     {
       player->secretcount++;
       sector->special &= ~SECRET_MASK;
-      if (sector->special<32) // if all extended bits clear,
+      if (!(sector->special & GENERALISED_SECTOR_MASK))
         sector->special=0;    // sector is not special anymore
       //e6y
       if (hudadd_secretarea)
@@ -2626,8 +2626,8 @@ void P_SpawnSpecials (void)
         break;
       case 9:
         // secret sector
-        if (sector->special<32) //jff 3/14/98 bits don't count unless not
-          totalsecret++;        // a generalized sector type
+        if (!(sector->special & GENERALISED_SECTOR_MASK)) // bits don't count unless not
+          totalsecret++;                                  // a generalized sector type
         break;
 
       case 10:

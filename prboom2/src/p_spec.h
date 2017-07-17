@@ -86,6 +86,8 @@
 #define PUSH_MASK       0x200
 #define PUSH_SHIFT      9
 
+#define GENERALISED_SECTOR_MASK (DAMAGE_MASK | SECRET_MASK | FRICTION_MASK | PUSH_MASK)
+
 //jff 02/04/98 Define masks, shifts, for fields in
 // generalized linedef types
 
