@@ -835,6 +835,22 @@ dboolean P_CheckPosition (mobj_t* thing,fixed_t x,fixed_t y)
 }
 
 
+static void CheckForInstaDeath(mobj_t* thing)
+{
+  struct msecnode_s* ms;
+  sector_t *s;
+
+  for(ms = thing->touching_sectorlist; ms; ms = ms->m_tnext)
+  {
+    s = ms->m_sector;
+    if(s->special == 4096 && s->floorheight >= thing->floorz)
+    {
+      P_DamageMobj(thing, NULL, NULL, 4*thing->health); // gib
+      return;
+    }
+  }
+}
+
 //
 // P_TryMove
 // Attempt to move to a new position,
@@ -958,6 +974,8 @@ dboolean P_TryMove(mobj_t* thing,fixed_t x,fixed_t y,
         P_PointOnLineSide(thing->x, thing->y, spechit[numspechit]))
       P_CrossSpecialLine(spechit[numspechit], oldside, thing, false);
   }
+
+  CheckForInstaDeath(thing);
 
   return true;
   }

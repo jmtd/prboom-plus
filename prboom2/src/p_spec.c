@@ -2379,6 +2379,11 @@ void P_PlayerInSpecialSector (player_t* player)
           G_ExitLevel();
         break;
 
+      case 4096:
+        // BOOM++ insta-death
+        P_DamageMobj(player->mo, NULL, NULL, 999);
+        break;
+
       default:
         //jff 1/24/98 Don't exit as DOOM2 did, just ignore
         break;
