@@ -35,6 +35,7 @@
 #include "w_wad.h"
 #include "r_main.h"
 #include "p_spec.h"
+#include "p_tick.h" // P_SetTarget
 #include "g_game.h"
 #include "s_sound.h"
 #include "sounds.h"
@@ -246,6 +247,19 @@ int GetPairForSwitchTexture(side_t *side)
   
   return switchlist[i^1];
 }
+
+// XXX: this does not belong in this file
+static void JMTD_wakeMonsters(line_t *line, mobj_t *target)
+{
+  int i;
+
+  for (i = -1; (i = P_FindSectorFromLineTag(line,i)) >= 0;) // -1 ?!
+  {
+    sector_t *sector = sectors+i;
+    P_SetTarget(&(sector->soundtarget), target);
+  }
+}
+
 
 //
 // P_UseSpecialLine
@@ -637,6 +651,12 @@ P_UseSpecialLine
       // Raise Floor 512
       if (EV_DoFloor(line,raiseFloor512))
         P_ChangeSwitchTexture(line,0);
+      break;
+
+    case 479:
+      // wake up monsters (temporary number)
+      JMTD_wakeMonsters(line, thing);
+      P_ChangeSwitchTexture(line,0);
       break;
 
       // killough 1/31/98: factored out compatibility check;
